@@ -41,16 +41,22 @@ public class User {
 		this.dateOfBirthd = dateOfBirthd;
 	}
 
-	public Object getFullName() {
-		return getLastName() + ", " + getFirstName();
+	public String getFullName() {
+		if (getLastName() == null || getFirstName() == null) {
+			throw new IllegalArgumentException("One of neccessary fields, first or last name, is empty");
+		}
+		String ans = new StringBuilder(getLastName()).append(", ").append(getFirstName()).toString();
+		return ans;
 	}
 
 	public int getAge() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new Date());
 		int currentYear = calendar.get(Calendar.YEAR);
+		int currentDayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		calendar.setTime(getDateOfBirthd());
 		int year = calendar.get(Calendar.YEAR);
-		return currentYear - year;
+		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);	
+		return currentDayOfYear < dayOfYear ? currentYear - year - 1 : currentYear - year;
 	}
 }
