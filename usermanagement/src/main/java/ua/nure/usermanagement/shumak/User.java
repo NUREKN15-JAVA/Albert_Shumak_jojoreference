@@ -9,6 +9,25 @@ public class User {
 	private String lastName;
 	private Date dateOfBirthd;
 
+	public User(User user) {
+		this.setDateOfBirthd(user.getDateOfBirthd());
+		this.setFirstName(user.getFirstName());
+		this.setLastName(user.getLastName());
+		this.setId(user.getId());
+	}
+
+	public User(Long id, String firstName, String lastName, Date dateOfBirthd) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirthd = dateOfBirthd;
+	}
+
+	public User() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -56,7 +75,7 @@ public class User {
 		int currentDayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		calendar.setTime(getDateOfBirthd());
 		int year = calendar.get(Calendar.YEAR);
-		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);	
+		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		return currentDayOfYear < dayOfYear ? currentYear - year - 1 : currentYear - year;
 	}
 }
