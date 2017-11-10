@@ -1,25 +1,28 @@
 package ua.nure.usermanagement.shumak.db;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class DAOFactoryTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
 
-	private DAOFactory dao;
+public class DAOFactoryTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	private DAOFactory dao;	
+	
+	@Before
+	public void setUp() throws Exception {
 		dao = DAOFactory.getInstance();
 	}
 
-	public void testGetUserDao() {
-		assertNotNull("DAOFactory instance is null", dao);
+	@Test
+	public void testGetUserDAO(){	
+		assertNotNull("DaoFactory instance is null", dao);
 		try {
-			UserDAO userDao = dao.getUserDao();
-		} catch (RuntimeException e) {
+			UserDAO userdao = dao.getUserDAO();
+		} catch (Exception e) {
 			e.printStackTrace();
-			fail(e.toString());
+            fail(e.toString());
 		}
+		
 	}
-
 }

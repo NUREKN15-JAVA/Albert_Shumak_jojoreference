@@ -2,6 +2,11 @@ package ua.nure.usermanagement.shumak.db;
 
 public class DatabaseException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3952294853531645740L;
+
 	public DatabaseException() {
 		// TODO Auto-generated constructor stub
 	}
