@@ -49,7 +49,7 @@ public class MainFrameTest extends JFCTestCase {
 			mockUserDao = ((MockDAOFactory) DAOFactory.getInstance()).getMockUserDAO();
 			User expectedUser = new User(new Long(1000), "George", "Bush", new Date());
 			users = Collections.singletonList(expectedUser);
-			mockUserDao.expectAndReturn("findAll", new ArrayList());
+			mockUserDao.expectAndReturn("findAll", users);
 			setHelper(new JFCTestHelper());
 			mainFrame = new MainFrame();
 		} catch (Exception e) {
@@ -103,6 +103,7 @@ public class MainFrameTest extends JFCTestCase {
 			User user = new User(firstName, lastName, now);
 			User expectedUser = new User(new Long(1), firstName, lastName, now);
 			mockUserDao.expectAndReturn("create", user, expectedUser);
+			ArrayList users = new ArrayList(this.users);
 			users.add(expectedUser);
 			mockUserDao.expectAndReturn("findAll", users);
 			JTable table = (JTable) find(JTable.class, "userTable");
@@ -116,88 +117,85 @@ public class MainFrameTest extends JFCTestCase {
 			find(JPanel.class, "browsePanel");
 			table = (JTable) find(JTable.class, "userTable");
 			assertEquals(2, table.getRowCount());
+
 			mockUserDao.verify();
 		} catch (Exception e) {
 			fail(e.toString());
 		}
 	}
-	
+
 	@Test
-	 public void testCancelAddUser() {
-	        try {
-	            String firstName = "John";
-	            String lastName = "Doe";
-	            Date now = new Date();
-	            mockUserDao.expectAndReturn("findAll", users);	            
-	            JTable table = (JTable) find(JTable.class, "userTable");
-	            assertEquals(1, table.getRowCount());
-	            JButton addButton = (JButton) find(JButton.class, "addButton");
-	            getHelper().enterClickAndLeave(new MouseEventData(this, addButton));
-	            find(JPanel.class, "addPanel");
-	            fillField(firstName, lastName, now);
-	            JButton cancelButton = (JButton) find(JButton.class, "cancelButton");
-	            getHelper().enterClickAndLeave(new MouseEventData(this, cancelButton));
-	            find(JPanel.class, "browsePanel");
-	            table = (JTable) find(JTable.class, "userTable");
-	            assertEquals(1, table.getRowCount());	          
-	            mockUserDao.verify();
-	        } catch (Exception e) {
-	            fail(e.toString());
-	        }
-	    }
-	
-	@Test
-	 public void testCancelEditUser() {
-	        try {
-	            String firstName = "John";
-	            String lastName = "Doe";
-	            Date now = new Date();
-	            User expectedUser = new User(new Long(1), firstName, lastName, now);
-	            users.add(expectedUser);	           
-	            mockUserDao.expectAndReturn("findAll", users);	            
-	            JTable table = (JTable) find(JTable.class, "userTable");
-	            assertEquals(1, table.getRowCount());
-	            JButton editButton = (JButton) find(JButton.class, "editButton");
-	            getHelper().enterClickAndLeave(new MouseEventData(this, editButton));
-	            String title = "Edit user";
-	            findDialog(title);	           
-	            getHelper().enterClickAndLeave(new JTableMouseEventData(this, table, 0, 0, 1));
-	            getHelper().enterClickAndLeave(new MouseEventData(this, editButton));       
-	            find(JPanel.class, "editPanel");
-	            JTextField firstNameField = (JTextField) find(JTextField.class,
-	                    "firstNameField");
-	            JTextField lastNameField = (JTextField) find(JTextField.class,
-	                    "lastNameField");
-	            JTextField dateOfBirthField = (JTextField) find(JTextField.class,
-	                    "dateOfBirthField");  
-	            assertEquals("George", firstNameField.getText());
-	            assertEquals("Bush", lastNameField.getText());
-	            getHelper().sendString(
-	                    new StringEventData(this, firstNameField, firstName));
-	            getHelper().sendString(
-	                    new StringEventData(this, lastNameField, lastName));
-	            DateFormat formatter = DateFormat.getDateInstance();
-	            String date = formatter.format(now);
-	            getHelper().sendString(
-	                    new StringEventData(this, dateOfBirthField, date));
-	            JButton cancelButton = (JButton) find(JButton.class, "cancelButton");
-	            getHelper().enterClickAndLeave(new MouseEventData(this, cancelButton));
-	            find(JPanel.class, "browsePanel");
-	            table = (JTable) find(JTable.class, "userTable");
-	            assertEquals(2, table.getRowCount());
-	            mockUserDao.verify();
-	            
-	        } catch (Exception e) {
-	            fail(e.toString());
-	        }
+	public void testCancelAddUser() {
+		try {
+			String firstName = "John";
+			String lastName = "Doe";
+			Date now = new Date();
+			ArrayList users = new ArrayList(this.users);
+			mockUserDao.expectAndReturn("findAll", users);
+			JTable table = (JTable) find(JTable.class, "userTable");
+			assertEquals(1, table.getRowCount());
+			JButton addButton = (JButton) find(JButton.class, "addButton");
+			getHelper().enterClickAndLeave(new MouseEventData(this, addButton));
+			find(JPanel.class, "addPanel");
+			fillField(firstName, lastName, now);
+			JButton cancelButton = (JButton) find(JButton.class, "cancelButton");
+			getHelper().enterClickAndLeave(new MouseEventData(this, cancelButton));
+			find(JPanel.class, "browsePanel");
+			table = (JTable) find(JTable.class, "userTable");
+			assertEquals(1, table.getRowCount());
+			mockUserDao.verify();
+		} catch (Exception e) {
+			fail(e.toString());
+		}
 	}
-	
+
+	@Test
+	public void testCancelEditUser() {
+		try {
+			String firstName = "John";
+			String lastName = "Doe";
+			Date now = new Date();
+			User expectedUser = new User(new Long(1), firstName, lastName, now);
+			List users = new ArrayList(this.users);
+			users.add(expectedUser);
+			mockUserDao.expectAndReturn("findAll", users);
+			JTable table = (JTable) find(JTable.class, "userTable");
+			assertEquals(1, table.getRowCount());
+			JButton editButton = (JButton) find(JButton.class, "editButton");
+			getHelper().enterClickAndLeave(new MouseEventData(this, editButton));
+			String title = "Edit user";
+			findDialog(title);
+			getHelper().enterClickAndLeave(new JTableMouseEventData(this, table, 0, 0, 1));
+			getHelper().enterClickAndLeave(new MouseEventData(this, editButton));
+			find(JPanel.class, "editPanel");
+			JTextField firstNameField = (JTextField) find(JTextField.class, "firstNameField");
+			JTextField lastNameField = (JTextField) find(JTextField.class, "lastNameField");
+			JTextField dateOfBirthField = (JTextField) find(JTextField.class, "dateOfBirthField");
+			assertEquals("George", firstNameField.getText());
+			assertEquals("Bush", lastNameField.getText());
+			getHelper().sendString(new StringEventData(this, firstNameField, firstName));
+			getHelper().sendString(new StringEventData(this, lastNameField, lastName));
+			DateFormat formatter = DateFormat.getDateInstance();
+			String date = formatter.format(now);
+			getHelper().sendString(new StringEventData(this, dateOfBirthField, date));
+			JButton cancelButton = (JButton) find(JButton.class, "cancelButton");
+			getHelper().enterClickAndLeave(new MouseEventData(this, cancelButton));
+			find(JPanel.class, "browsePanel");
+			table = (JTable) find(JTable.class, "userTable");
+			assertEquals(2, table.getRowCount());
+			mockUserDao.verify();
+		} catch (Exception e) {
+			fail(e.toString());
+		}
+	}
+
 	@Test
 	public void testEditUser() {
 		try {
-			User expectedUser = new User(new Long(1000), "George", "Bush", new Date());
+			User expectedUser = (User) users.get(0);
+			System.out.println(expectedUser);
 			mockUserDao.expect("update", expectedUser);
-			List users = new ArrayList(this.users);
+			List users = Collections.singletonList(expectedUser);
 			mockUserDao.expectAndReturn("findAll", users);
 			JTable table = (JTable) find(JTable.class, "userTable");
 			assertEquals(1, table.getRowCount());
@@ -208,8 +206,8 @@ public class MainFrameTest extends JFCTestCase {
 			JTextField firstNameField = (JTextField) find(JTextField.class, "firstNameField");
 			JTextField lastNameField = (JTextField) find(JTextField.class, "lastNameField");
 			JTextField dateOfBirthField = (JTextField) find(JTextField.class, "dateOfBirthField");
-			getHelper().sendString(new StringEventData(this, firstNameField, "1"));
-			getHelper().sendString(new StringEventData(this, lastNameField, "1"));
+			getHelper().sendString(new StringEventData(this, firstNameField, "G"));
+			getHelper().sendString(new StringEventData(this, lastNameField, "B"));
 			JButton okButton = (JButton) find(JButton.class, "okButton");
 			getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
 			find(JPanel.class, "browsePanel");
@@ -220,65 +218,61 @@ public class MainFrameTest extends JFCTestCase {
 			fail(e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testDeleteUser() {
-        try {
-            User expectedUser = new User(new Long(1000), "George", "Bush", new Date());
-            mockUserDao.expect("delete", expectedUser);
-            mockUserDao.expectAndReturn("findAll", users);   
-            JTable table = (JTable) find(JTable.class, "userTable");
-            assertEquals(1, table.getRowCount());
-            JButton deleteButton = (JButton) find(JButton.class, "deleteButton");
-            getHelper().enterClickAndLeave(new JTableMouseEventData(this, table, 0, 0, 1));
-            getHelper().enterClickAndLeave(new MouseEventData(this, deleteButton));
-            find(JPanel.class, "browsePanel");
-            table = (JTable) find(JTable.class, "userTable");
-            assertEquals(0, table.getRowCount());
-            mockUserDao.verify();
-        } catch (Exception e) {
-            fail(e.toString());
-        }
-}
-	
-	@Test
-	public void testDetailsUser() {
 		try {
+			User expectedUser = new User(new Long(1000), "George", "Bush", new Date());
+			mockUserDao.expect("delete", expectedUser);
+			List users = new ArrayList();
 			mockUserDao.expectAndReturn("findAll", users);
 			JTable table = (JTable) find(JTable.class, "userTable");
 			assertEquals(1, table.getRowCount());
+			JButton deleteButton = (JButton) find(JButton.class, "deleteButton");
+			getHelper().enterClickAndLeave(new JTableMouseEventData(this, table, 0, 0, 1));
+			getHelper().enterClickAndLeave(new MouseEventData(this, deleteButton));
+			find(JPanel.class, "browsePanel");
+			table = (JTable) find(JTable.class, "userTable");
+			assertEquals(0, table.getRowCount());
+			mockUserDao.verify();
+		} catch (Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	@Test
+	public void testDetailsUser() {
+		try {
+			JTable table = (JTable) find(JTable.class, "userTable");
 			JButton detailsButton = (JButton) find(JButton.class, "detailsButton");
-			getHelper().enterClickAndLeave(new MouseEventData(this, detailsButton));
-			String title = "Edit user";
-			findDialog(title);
 			getHelper().enterClickAndLeave(new JTableMouseEventData(this, table, 0, 0, 1));
 			getHelper().enterClickAndLeave(new MouseEventData(this, detailsButton));
 			find(JPanel.class, "detailsPanel");
 			JTextField firstNameField = (JTextField) find(JTextField.class, "firstNameField");
 			JTextField lastNameField = (JTextField) find(JTextField.class, "lastNameField");
-			JTextField dateOfBirthField = (JTextField) find(JTextField.class, "dateOfBirthField");
+			JTextField AgeField = (JTextField) find(JTextField.class, "ageField");
 			assertEquals("George", firstNameField.getText());
 			assertEquals("Bush", lastNameField.getText());
-			JButton backButton = (JButton) find(JButton.class, "backButton");
-			getHelper().enterClickAndLeave(new MouseEventData(this, backButton));
+			assertEquals("0", AgeField.getText());
+			JButton okButton = (JButton) find(JButton.class, "okButton");
+			mockUserDao.expectAndReturn("findAll", users);
+			getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
 			find(JPanel.class, "browsePanel");
 			table = (JTable) find(JTable.class, "userTable");
 			assertEquals(1, table.getRowCount());
-			mockUserDao.verify();
-
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-}
-
-	 private void findDialog(String title) {
-			JDialog dialog;
-			DialogFinder dFinder = new DialogFinder(title);
-			dialog = (JDialog) dFinder.find();
-			assertNotNull("Could not find dialog '" + title + "'", dialog);
-			getHelper().disposeWindow(dialog, this);
 	}
-	 
+
+	private void findDialog(String title) {
+		JDialog dialog;
+		DialogFinder dFinder = new DialogFinder(title);
+		dialog = (JDialog) dFinder.find();
+		assertNotNull("Could not find dialog '" + title + "'", dialog);
+		getHelper().disposeWindow(dialog, this);
+	}
+
 	private void fillField(String firstName, String lastName, Date now) {
 		JTextField firstNameField = (JTextField) find(JTextField.class, "firstNameField");
 		JTextField lastNameField = (JTextField) find(JTextField.class, "lastNameField");
