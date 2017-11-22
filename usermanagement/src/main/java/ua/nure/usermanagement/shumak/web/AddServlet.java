@@ -18,6 +18,6 @@ public class AddServlet extends HttpServlet {
 	}
 
 	protected void processUser(User user) throws DatabaseException {
-		DAOFactory.getInstance().getUserDao().create(user);
+		DAOFactory.getInstance().getUserDAO().create(user);
 	}
 }

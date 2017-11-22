@@ -3,10 +3,11 @@
 <html>
 <head><title>User management. Details</title></head>
 <body>
+   
     First name: ${user.firstName}<br>
     Last name: ${user.lastName}<br>
     Date of birth: <fmt:formatDate value="${user.dateOfBirth}" type="date" dateStyle="medium"/><br>
-
+  
     <form action="<%=request.getContextPath()%>/details" method="get">
         <input type="submit" name="okButton" value="Ok">
     </form>
