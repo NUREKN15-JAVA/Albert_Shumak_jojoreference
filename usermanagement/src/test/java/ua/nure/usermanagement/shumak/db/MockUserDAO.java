@@ -44,7 +44,11 @@ public class MockUserDAO implements UserDAO {
 	@Override
 	public void setConnectionFactory(ConnectionFactory connectionFactory) {
 		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public Collection find(String firstName, String lastName) throws DatabaseException {
+		throw new UnsupportedOperationException();
 	}
 
 }
